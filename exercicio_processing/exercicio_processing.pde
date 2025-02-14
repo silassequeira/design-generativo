@@ -1,5 +1,5 @@
 Bola[] bol;
-int n = 1;
+int n = 10;
 float ang, alfa = TWO_PI/n;
 boolean roda = false;
 
@@ -26,14 +26,15 @@ void createNewBola(int index) {
   float cy2 = random(height);
   float cy3 = random(height);
   float y4 = random(height);
-  float r1 = random(100, 300);
+  float r1 = random(10, 50);
   color c1 = color(random(255), random(255), random(255));
   
   bol[index] = new Bola(x1, cx2, cx3, x4, y1, cy2, cy3, y4, r1, c1);
 }
 
 void draw() {
-  
+  smooth();
+
   for (int i = 0; i < n; i++) {
     bol[i].desenha();
     // Add some movement to existing circles

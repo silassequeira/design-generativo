@@ -5,7 +5,7 @@ class Bola {
   float px, py;
   float tx, ty;
   float t = 0;
-  float speed = 0.02; // Speed initialized here
+  float speed = 0.9; // Speed initialized here
   float magnitude;
   float movement;
   color c;
@@ -26,7 +26,6 @@ class Bola {
   }
 
   void desenha() {
-    strokeWeight(movement);
     ellipseMode(CENTER);
     fill(c);
 
@@ -42,7 +41,7 @@ class Bola {
     // Update position to new t
     updatePosition();
 
-    ellipse(px, py, r*speed*3, r*speed*3);
+    ellipse(px, py, r*2, r*2);
   }
 
   void updatePosition() {
