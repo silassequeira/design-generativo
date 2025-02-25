@@ -41,7 +41,9 @@ class Bola {
     // Update position to new t
     updatePosition();
 
-    ellipse(px, py, r*2, r*2);
+    // Adjust size based on speed with a more noticeable effect
+    float adjustedR = r * (0.5 + speed);
+    ellipse(px, py, adjustedR * 2, adjustedR * 2);
   }
 
   void updatePosition() {
@@ -70,7 +72,21 @@ class Bola {
     y4 = constrain(y4, 0, height);
   }
 
-  void rodar() {
-    // Implement rotation if needed
+  void updateSpeed() {
+    // Randomly increase or decrease speed
+    speed += random(-0.05, 0.05);
+    // Constrain speed to a reasonable range
+    speed = constrain(speed, 0.5, 2.0);
+  }
+
+  boolean isColliding(Bola other) {
+    float distance = dist(px, py, other.px, other.py);
+    return distance < (this.r+10 + other.r+10);
+  }
+
+  void resolveCollision(Bola other) {
+    float tempSpeed = this.speed;
+    this.speed = other.speed;
+    other.speed = tempSpeed;
   }
 }
