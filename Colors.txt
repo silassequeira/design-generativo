@@ -4,3 +4,4 @@ rgb(206, 73, 46) - Orange Dark
 rgb(226, 190, 82) - Yellow
 rgb(247, 236, 205) - Yellow Light
 rgb(79, 121, 120) - Blue
+rgb(215, 206, 197) - White Grey 

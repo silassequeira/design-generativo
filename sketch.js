@@ -3,22 +3,48 @@
 
 // Configuration
 let config = {
-    cableCount: 8,
-    gravity: 0.2,
+    // Number of cables to create initially
+    cableCount: 12,
+
+    // Downward force applied to cable segments (higher = more drooping)
+    gravity: 0.01,
+
+    // Cable stiffness - higher values make cables less flexible (1-20)
     tension: 5,
+
+    // Number of points that make up each cable (more = smoother but slower)
     cableSegments: 12,
+
+    // Visual thickness of the cables when drawn
     cableThickness: 4,
+
+    // Size of the connection jacks
     jackRadius: 15,
+
+    // Size of the cable end connectors 
     connectorRadius: 12,
+
+    // Physics damping factor (0-1) - lower values make cables more bouncy
     dampening: 0.98,
+
+    // Background color in RGB format [R, G, B]
     backgroundColor: [20, 20, 30],
-    jackColor: [200, 100, 50],
+
+    // Jack color in RGB format [R, G, B] when not connected
+    jackColor: [215, 206, 197],
 
     // Animation settings
-    connectionInterval: 3000,   // Time in ms between connection changes
-    connectionDuration: 1000,   // Time in ms for connection animation
-    autoGravityRange: [0.05, 0.25], // Min and max for gravity oscillation
-    autoTensionRange: [3, 8]    // Min and max for tension oscillation
+    // Time in milliseconds between automatic connection/disconnection events
+    connectionInterval: 1500,
+
+    // Duration in milliseconds for connection/disconnection animations to complete
+    connectionDuration: 1000,
+
+    // Min and max values for gravity oscillation over time for organic movement
+    autoGravityRange: [0.05, 0.25],  // Was [0.05, 0.25]
+
+    // Min and max values for tension oscillation over time for organic movement
+    autoTensionRange: [2, 6]       // Was [3, 8]
 };
 
 // Main variables
@@ -182,27 +208,31 @@ function createCablePoints(start, end) {
         isConnector: true
     });
 
-    // Generate cable segments with a gentle initial curve
-    for (let i = 1; i < config.cableSegments; i++) {
-        const t = i / config.cableSegments;
+    // Calculate direct distance for reference
+    const directDistance = dist(start.x, start.y, end.x, end.y);
+
+    // Create more segments for longer cables
+    const segmentCount = config.cableSegments + floor(directDistance / 200);
+
+    // Generate cable segments with significant initial droop
+    for (let i = 1; i < segmentCount; i++) {
+        const t = i / segmentCount;
 
         // Create a drooping curve effect
         let x = lerp(start.x, end.x, t);
         let y = lerp(start.y, end.y, t);
 
-        // Add some initial droop to the cable
-        const distance = dist(start.x, start.y, end.x, end.y);
-
-        // More droop for longer cables and for middle segments
-        const droopFactor = distance / 5;
+        // Add substantial droop to the cable - increase droopFactor
+        const droopFactor = directDistance / 2.5; // More aggressive drooping
         const droop = sin(t * PI) * droopFactor;
 
+        // Apply droop - pull down more in the middle
         y += droop;
 
-        // Add some randomness to create a more natural look
-        if (i > 1 && i < config.cableSegments - 1) {
-            x += random(-10, 10);
-            y += random(-10, 10);
+        // Add significant randomness for a more natural look
+        if (i > 1 && i < segmentCount - 1) {
+            x += random(-20, 20);
+            y += random(-10, 30); // Bias downward
         }
 
         cablePoints.push({
@@ -226,7 +256,6 @@ function createCablePoints(start, end) {
 
     return cablePoints;
 }
-
 function updatePhysics() {
     // Apply physics to each cable
     cables.forEach(cable => {
@@ -262,15 +291,26 @@ function updatePhysics() {
                 const dy = p2.y - p1.y;
                 const currentDistance = sqrt(dx * dx + dy * dy);
 
-                // Desired distance between cable segments
-                const restDistance = 20;
+                // Significantly increase the rest distance to ensure drooping
+                // Add more excess length based on the total cable distance
+                const totalCableLength = dist(
+                    cable.points[0].x,
+                    cable.points[0].y,
+                    cable.points[cable.points.length - 1].x,
+                    cable.points[cable.points.length - 1].y
+                );
+
+                // Make rest distance 25-40% longer than needed
+                const excessFactor = 1.3 + sin(i * 0.5) * 0.1;  // Varies between 1.2-1.4
+                const restDistance = 25 * excessFactor;
 
                 // Calculate the difference from rest length
                 const difference = (restDistance - currentDistance) / currentDistance;
 
-                // Apply correction
-                const offsetX = dx * 0.5 * difference;
-                const offsetY = dy * 0.5 * difference;
+                // Apply a more relaxed correction
+                const relaxFactor = 0.25;
+                const offsetX = dx * relaxFactor * difference;
+                const offsetY = dy * relaxFactor * difference;
 
                 // Move points to maintain cable segment length
                 if (!p1.fixed) {
@@ -321,13 +361,24 @@ function createNewConnection() {
 
     if (unconnectedJacks.length >= 2) {
         const startIndex = floor(random(unconnectedJacks.length));
-        let endIndex;
-        do {
-            endIndex = floor(random(unconnectedJacks.length));
-        } while (startIndex === endIndex);
-
         const startJack = unconnectedJacks[startIndex];
-        const endJack = unconnectedJacks[endIndex];
+
+        // Find jacks that are within a reasonable connection distance
+        const maxConnectionDistance = canvasWidth / 2;  // Limit how far cables can stretch
+
+        const possibleTargets = unconnectedJacks.filter((jack, index) => {
+            if (index === startIndex) return false;  // Can't connect to self
+
+            // Calculate distance between jacks
+            const distance = dist(startJack.x, startJack.y, jack.x, jack.y);
+            return distance < maxConnectionDistance;
+        });
+
+        // If no valid targets found, exit
+        if (possibleTargets.length === 0) return;
+
+        // Choose a random end jack from valid targets
+        const endJack = possibleTargets[floor(random(possibleTargets.length))];
 
         // Create new connection and add to in-progress list
         const newCable = createCable(startJack, endJack);
@@ -554,7 +605,7 @@ function drawConnector(point, cableColor) {
     const b = blue(cableColor);
 
     // Draw connector
-    fill(60);
+    fill(215, 206, 197);
     stroke(30);
     strokeWeight(1);
     circle(point.x, point.y, config.connectorRadius);
