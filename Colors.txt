@@ -1,0 +1,6 @@
+rgb(35, 139, 47) - Green 
+rgb(255, 102, 0) - Orange
+rgb(206, 73, 46) - Orange Dark
+rgb(226, 190, 82) - Yellow
+rgb(247, 236, 205) - Yellow Light
+rgb(79, 121, 120) - Blue
