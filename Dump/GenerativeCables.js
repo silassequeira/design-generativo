@@ -3,8 +3,8 @@
 
 // Configuration
 let config = {
-// Number of cables to create initially
-cableCount: 12,
+    // Number of cables to create initially
+    cableCount: 12,
 
     // Downward force applied to cable segments (higher = more drooping)
     gravity: 0.01,
@@ -21,7 +21,7 @@ cableCount: 12,
     // Size of the connection jacks
     jackRadius: 15,
 
-    // Size of the cable end connectors
+    // Size of the cable end connectors 
     connectorRadius: 12,
 
     // Physics damping factor (0-1) - lower values make cables more bouncy
@@ -45,7 +45,6 @@ cableCount: 12,
 
     // Min and max values for tension oscillation over time for organic movement
     autoTensionRange: [2, 6]       // Was [3, 8]
-
 };
 
 // Main variables
@@ -60,47 +59,45 @@ let disconnectionsInProgress = [];
 let globalAnimationTime = 0;
 
 function setup() {
-// Create canvas that fills the window
-canvasWidth = windowWidth;
-canvasHeight = windowHeight;
-let canvas = createCanvas(canvasWidth, canvasHeight);
-canvas.parent('canvas-container');
+    // Create canvas that fills the window
+    canvasWidth = windowWidth;
+    canvasHeight = windowHeight;
+    let canvas = createCanvas(canvasWidth, canvasHeight);
+    canvas.parent('canvas-container');
 
     // Initialize the visualization
     resetSimulation();
 
     // Start with fewer cables so we can see them being created
     cables = cables.slice(0, 3);
-
 }
 
 function resetSimulation() {
-points = [];
-cables = [];
-connectionsInProgress = [];
-disconnectionsInProgress = [];
+    points = [];
+    cables = [];
+    connectionsInProgress = [];
+    disconnectionsInProgress = [];
 
     // Create fixed connection points (like synthesizer jacks)
     createJacks();
 
     // Create initial cables between random points
     createCables();
-
 }
 
 function createJacks() {
-// Top row of jacks
-const topJackCount = 8;
-for (let i = 0; i < topJackCount; i++) {
-points.push({
-x: (canvasWidth / (topJackCount + 1)) \* (i + 1),
-y: 80,
-fixed: true,
-isJack: true,
-id: points.length,
-connected: false
-});
-}
+    // Top row of jacks
+    const topJackCount = 8;
+    for (let i = 0; i < topJackCount; i++) {
+        points.push({
+            x: (canvasWidth / (topJackCount + 1)) * (i + 1),
+            y: 80,
+            fixed: true,
+            isJack: true,
+            id: points.length,
+            connected: false
+        });
+    }
 
     // Bottom row of jacks
     const bottomJackCount = 8;
@@ -153,19 +150,18 @@ connected: false
             connected: false
         });
     }
-
 }
 
 function createCable(startJack, endJack) {
-// Using color palette from Colors.txt
-let cableColor;
-const colorType = floor(random(4));
-switch (colorType) {
-case 0: cableColor = color(35, 139, 47, 220); break; // Green
-case 1: cableColor = color(255, 102, 0, 220); break; // Orange
-case 2: cableColor = color(226, 190, 82, 220); break; // Yellow
-case 3: cableColor = color(79, 121, 120, 220); break; // Blue
-}
+    // Using color palette from Colors.txt
+    let cableColor;
+    const colorType = floor(random(4));
+    switch (colorType) {
+        case 0: cableColor = color(35, 139, 47, 220); break;   // Green
+        case 1: cableColor = color(255, 102, 0, 220); break;   // Orange
+        case 2: cableColor = color(226, 190, 82, 220); break;  // Yellow
+        case 3: cableColor = color(79, 121, 120, 220); break;  // Blue
+    }
 
     // Mark jacks as connected
     startJack.connected = true;
@@ -179,11 +175,10 @@ case 3: cableColor = color(79, 121, 120, 220); break; // Blue
         age: 0,
         connectionProgress: 0
     };
-
 }
 
 function createCables() {
-const jackPoints = points.filter(p => p.isJack);
+    const jackPoints = points.filter(p => p.isJack);
 
     // Create cables between random jacks
     for (let i = 0; i < config.cableCount; i++) {
@@ -198,11 +193,10 @@ const jackPoints = points.filter(p => p.isJack);
 
         cables.push(createCable(startJack, endJack));
     }
-
 }
 
 function createCablePoints(start, end) {
-let cablePoints = [];
+    let cablePoints = [];
 
     // Start point (fixed at jack)
     cablePoints.push({
@@ -261,12 +255,11 @@ let cablePoints = [];
     });
 
     return cablePoints;
-
 }
 function updatePhysics() {
-// Apply physics to each cable
-cables.forEach(cable => {
-const cablePoints = cable.points;
+    // Apply physics to each cable
+    cables.forEach(cable => {
+        const cablePoints = cable.points;
 
         // Update positions using Verlet integration
         for (let i = 0; i < cablePoints.length; i++) {
@@ -331,11 +324,10 @@ const cablePoints = cable.points;
             }
         }
     });
-
 }
 
 function manageConnections() {
-globalAnimationTime += deltaTime;
+    globalAnimationTime += deltaTime;
 
     // Vary gravity and tension over time for more organic movement
     const gravityRange = config.autoGravityRange;
@@ -361,12 +353,11 @@ globalAnimationTime += deltaTime;
             createNewConnection();
         }
     }
-
 }
 
 function createNewConnection() {
-// Find unconnected jacks
-const unconnectedJacks = points.filter(p => p.isJack && !p.connected);
+    // Find unconnected jacks
+    const unconnectedJacks = points.filter(p => p.isJack && !p.connected);
 
     if (unconnectedJacks.length >= 2) {
         const startIndex = floor(random(unconnectedJacks.length));
@@ -394,13 +385,12 @@ const unconnectedJacks = points.filter(p => p.isJack && !p.connected);
         newCable.connectionProgress = 0;
         connectionsInProgress.push(newCable);
     }
-
 }
 
 function removeRandomConnection() {
-if (cables.length > 0) {
-const cableIndex = floor(random(cables.length));
-const cable = cables[cableIndex];
+    if (cables.length > 0) {
+        const cableIndex = floor(random(cables.length));
+        const cable = cables[cableIndex];
 
         // Get the jacks this cable was connected to
         const startJack = points.find(p => p.id === cable.start);
@@ -410,13 +400,12 @@ const cable = cables[cableIndex];
         cable.disconnectionProgress = 0;
         disconnectionsInProgress.push({ cable, index: cableIndex });
     }
-
 }
 
 function updateConnectionAnimations() {
-// Update connecting cables
-for (let i = connectionsInProgress.length - 1; i >= 0; i--) {
-const cable = connectionsInProgress[i];
+    // Update connecting cables
+    for (let i = connectionsInProgress.length - 1; i >= 0; i--) {
+        const cable = connectionsInProgress[i];
 
         // Update animation progress
         cable.connectionProgress += deltaTime / config.connectionDuration;
@@ -448,11 +437,10 @@ const cable = connectionsInProgress[i];
             if (endJack) endJack.connected = false;
         }
     }
-
 }
 
 function draw() {
-background(config.backgroundColor);
+    background(config.backgroundColor);
 
     // Manage automatic connections/disconnections
     manageConnections();
@@ -474,15 +462,14 @@ background(config.backgroundColor);
 
     // Draw cable connectors
     drawConnectors();
-
 }
 
 function drawCables() {
-cables.forEach(cable => {
-// Draw the cable
-stroke(cable.color);
-strokeWeight(config.cableThickness);
-noFill();
+    cables.forEach(cable => {
+        // Draw the cable
+        stroke(cable.color);
+        strokeWeight(config.cableThickness);
+        noFill();
 
         beginShape();
         for (let p of cable.points) {
@@ -490,14 +477,13 @@ noFill();
         }
         endShape();
     });
-
 }
 
 function drawConnectionsInProgress() {
-connectionsInProgress.forEach(cable => {
-const progress = cable.connectionProgress;
-const cablePoints = cable.points;
-const lastIndex = floor(lerp(0, cablePoints.length - 1, progress));
+    connectionsInProgress.forEach(cable => {
+        const progress = cable.connectionProgress;
+        const cablePoints = cable.points;
+        const lastIndex = floor(lerp(0, cablePoints.length - 1, progress));
 
         if (lastIndex <= 0) return;
 
@@ -523,14 +509,13 @@ const lastIndex = floor(lerp(0, cablePoints.length - 1, progress));
 
         endShape();
     });
-
 }
 
 function drawDisconnectionsInProgress() {
-disconnectionsInProgress.forEach(({ cable }) => {
-const progress = cable.disconnectionProgress;
-const cablePoints = cable.points;
-const firstIndex = floor(lerp(0, cablePoints.length - 1, progress));
+    disconnectionsInProgress.forEach(({ cable }) => {
+        const progress = cable.disconnectionProgress;
+        const cablePoints = cable.points;
+        const firstIndex = floor(lerp(0, cablePoints.length - 1, progress));
 
         if (firstIndex >= cablePoints.length - 1) return;
 
@@ -557,16 +542,15 @@ const firstIndex = floor(lerp(0, cablePoints.length - 1, progress));
 
         endShape();
     });
-
 }
 
 function drawJacks() {
-points.forEach(p => {
-if (p.isJack) {
-// Draw jack background
-fill(40);
-noStroke();
-circle(p.x, p.y, config.jackRadius \* 1.5);
+    points.forEach(p => {
+        if (p.isJack) {
+            // Draw jack background
+            fill(40);
+            noStroke();
+            circle(p.x, p.y, config.jackRadius * 1.5);
 
             // Draw jack
             fill(p.connected ? color(150, 210, 150) : config.jackColor);
@@ -575,14 +559,13 @@ circle(p.x, p.y, config.jackRadius \* 1.5);
             circle(p.x, p.y, config.jackRadius);
         }
     });
-
 }
 
 function drawConnectors() {
-// Draw connectors for regular cables
-cables.forEach(cable => {
-drawCableConnectors(cable);
-});
+    // Draw connectors for regular cables
+    cables.forEach(cable => {
+        drawCableConnectors(cable);
+    });
 
     // Draw connectors for in-progress connections
     connectionsInProgress.forEach(cable => {
@@ -603,25 +586,23 @@ drawCableConnectors(cable);
             drawConnector(endPoint, cable.color);
         }
     });
-
 }
 
 function drawCableConnectors(cable) {
-// Get first and last points of the cable
-const startPoint = cable.points[0];
-const endPoint = cable.points[cable.points.length - 1];
+    // Get first and last points of the cable
+    const startPoint = cable.points[0];
+    const endPoint = cable.points[cable.points.length - 1];
 
     // Draw connectors
     drawConnector(startPoint, cable.color);
     drawConnector(endPoint, cable.color);
-
 }
 
 function drawConnector(point, cableColor) {
-// Extract base color from the cable color
-const r = red(cableColor);
-const g = green(cableColor);
-const b = blue(cableColor);
+    // Extract base color from the cable color
+    const r = red(cableColor);
+    const g = green(cableColor);
+    const b = blue(cableColor);
 
     // Draw connector
     fill(215, 206, 197);
@@ -638,13 +619,12 @@ const b = blue(cableColor);
     fill(r, g, b, 100);
     noStroke();
     circle(point.x, point.y, config.connectorRadius * 0.3);
-
 }
 
 // Window resize handling
 function windowResized() {
-canvasWidth = windowWidth;
-canvasHeight = windowHeight;
-resizeCanvas(canvasWidth, canvasHeight);
-resetSimulation();
+    canvasWidth = windowWidth;
+    canvasHeight = windowHeight;
+    resizeCanvas(canvasWidth, canvasHeight);
+    resetSimulation();
 }
