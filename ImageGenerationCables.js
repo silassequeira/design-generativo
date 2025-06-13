@@ -64,17 +64,14 @@ function setup() {
         return;
     }
 
-    // Resize image if needed to fit screen while maintaining aspect ratio
-    if (sourceImage.width > windowWidth || sourceImage.height > windowHeight) {
-        let ratio = min(windowWidth / sourceImage.width, windowHeight / sourceImage.height);
-        sourceImage.resize(sourceImage.width * ratio, sourceImage.height * ratio);
-    }
-
-    // Create canvas that matches image dimensions
-    canvasWidth = sourceImage.width;
-    canvasHeight = sourceImage.height;
+    // Always create a canvas that fills the window
+    canvasWidth = windowWidth;
+    canvasHeight = windowHeight;
     let canvas = createCanvas(canvasWidth, canvasHeight);
     canvas.parent('canvas-container');
+
+    // Resize image to fill the canvas completely
+    sourceImage.resize(canvasWidth, canvasHeight);
 
     // Analyze the source image
     analyzeImage();
@@ -86,7 +83,7 @@ function setup() {
     resetSimulation();
 
     // Set frameRate for smoother animation
-    frameRate(30);
+    frameRate(16);
 }
 
 function analyzeImage() {
@@ -767,27 +764,20 @@ function shuffleArray(array) {
     return array;
 }
 
-// Window resize handling
 function windowResized() {
-    // Only resize if we need to completely reset
-    if (windowWidth < canvasWidth * 0.8 || windowHeight < canvasHeight * 0.8) {
-        console.log("Window resized, restarting simulation");
+    // Always resize to fill the window
+    canvasWidth = windowWidth;
+    canvasHeight = windowHeight;
+    resizeCanvas(canvasWidth, canvasHeight);
 
-        if (sourceImage) {
-            // Resize image to fit new window
-            let ratio = min(windowWidth / sourceImage.width, windowHeight / sourceImage.height);
-            sourceImage.resize(sourceImage.width * ratio, sourceImage.height * ratio);
+    if (sourceImage) {
+        // Resize image to fill the canvas completely
+        sourceImage.resize(canvasWidth, canvasHeight);
 
-            // Update canvas size
-            canvasWidth = sourceImage.width;
-            canvasHeight = sourceImage.height;
-            resizeCanvas(canvasWidth, canvasHeight);
-
-            // Re-analyze image and reset simulation
-            analyzeImage();
-            generateColorClusters();
-            resetSimulation();
-        }
+        // Re-analyze image and reset simulation
+        analyzeImage();
+        generateColorClusters();
+        resetSimulation();
     }
 }
 
