@@ -24,6 +24,7 @@ class Config {
         this.maxConnectionsPerJack = 5; // Limit connections per point to avoid clutter
         this.progressiveRendering = true; // Enable progressive building of the image
         this.showOriginalImage = false;   // Toggle to show original image
+        this.showProgressPercentage = false;
     }
 
     // Update a config value and trigger any necessary updates

@@ -68,6 +68,7 @@ class ReconstructionSystem {
         this.cableGenerator.addCablesProgressively();
     }
 
+    // In reconstructionSystem.js
     draw() {
         if (!this.initialized) {
             // Show loading message
@@ -81,23 +82,14 @@ class ReconstructionSystem {
 
         background(this.config.backgroundColor);
 
-        // Optionally show the original image in the background
-        if (this.config.showOriginalImage && this.imageAnalyzer.sourceImage) {
-            push();
-            tint(255, 40); // Show with low opacity
-            image(this.imageAnalyzer.sourceImage, 0, 0);
-            noTint();
-            pop();
-        }
-
         // Draw cables
         this.cableGenerator.drawCables();
 
         // Draw jacks
         this.jackManager.drawJacks();
 
-        // Display progress
-        if (this.cableGenerator.pendingCables.length > 0) {
+        // Display progress only if the option is enabled
+        if (this.config.showProgressPercentage && this.cableGenerator.pendingCables.length > 0) {
             let progress = this.cableGenerator.getProgress();
             fill(255);
             noStroke();
