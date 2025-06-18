@@ -22,6 +22,11 @@ class Config {
 
     // Background color
     color backgroundColor = color(20, 20, 30);
+    
+    int selectedPalette = 0;
+    
+    // Whether to select from all colors in a palette or just one random color
+    boolean useRandomColorFromPalette = true;
 
     // Animation settings
     int connectionInterval = 1000;  // Time between connections/disconnections

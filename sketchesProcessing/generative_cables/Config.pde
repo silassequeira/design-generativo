@@ -28,6 +28,11 @@ class Config {
 
     // Jack color when not connected
     color jackColor = color(215, 206, 197);
+    
+    int selectedPalette = 0;
+    
+    // Whether to select from all colors in a palette or just one random color
+    boolean useRandomColorFromPalette = true;
 
     // Animation settings
     // Time in milliseconds between automatic connection/disconnection events

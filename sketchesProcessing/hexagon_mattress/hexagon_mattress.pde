@@ -3,7 +3,7 @@ float spacingMultiplier = 1.2;
 int globalCounter = 0;
 
 void setup() {
-  size(800, 800);
+  fullScreen();
   noStroke();
 }
 
