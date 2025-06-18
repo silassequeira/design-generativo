@@ -79,7 +79,7 @@ void draw() {
     // Calculate line length based on energy and time
     float energy = lerp(lastEnergies[colorIndex], currentEnergies[colorIndex], 0.1);
     float baseLength = map(energy, 0, 200, 30, 300);
-    float dynamicLength = baseLength * (1 + 0.5 * sin(millis() * 0.002 + i));
+    float dynamicLength = 3 * baseLength * (1 + 0.5 * sin(millis() * 0.002 + i));
 
     // Add oscillation to angle
     float angle = angles[i] + 0.05 * sin(millis() * 0.001 + i);

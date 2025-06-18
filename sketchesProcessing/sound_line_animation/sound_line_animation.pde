@@ -62,9 +62,6 @@ void draw() {
   // Draw the animated road
   drawRoad();
   
-  // Draw visualization and UI
-  drawVisualization();
-  drawUI();
   
   // Update scroll position
   scroll += 2 + 20 * bassLevel;
@@ -106,60 +103,6 @@ float getBandLevel(float low, float high) {
   float freq = map(song.position(), 0, song.duration(), low, high);
   float level = abs(sin(time * TWO_PI + freq * 0.001)) * smoothAmplitude;
   return constrain(level, 0, 1);
-}
-
-void drawVisualization() {
-  pushMatrix();
-  translate(width - 200, 20);
-  
-  // Draw amplitude meter
-  fill(50);
-  rect(0, 0, 40, 200);
-  float ampHeight = map(smoothAmplitude, 0, maxAmplitude, 0, 200);
-  fill(100, 200, 100);
-  rect(0, 200, 40, -ampHeight);
-  
-  // Draw frequency bands
-  translate(60, 0);
-  fill(200, 100, 100);
-  rect(0, 200, 40, -bassLevel * 200);
-  fill(200, 200, 100);
-  rect(40, 200, 40, -midLevel * 200);
-  fill(100, 100, 200);
-  rect(80, 200, 40, -trebleLevel * 200);
-  
-  // Draw labels
-  fill(240);
-  textSize(12);
-  textAlign(CENTER);
-  text("AMP", 20, 220);
-  text("BASS", 20, 240);
-  text("MID", 60, 240);
-  text("TREBLE", 100, 240);
-  
-  popMatrix();
-}
-
-void drawUI() {
-  fill(240);
-  textSize(16);
-  textAlign(LEFT);
-  text("Music-Reactive Road Animation", 20, 30);
-  textSize(14);
-  text("Amplitude: " + nf(smoothAmplitude, 0, 3), 20, 50);
-  text("Bass: " + nf(bassLevel, 0, 2), 20, 70);
-  text("Mid: " + nf(midLevel, 0, 2), 20, 90);
-  text("Treble: " + nf(trebleLevel, 0, 2), 20, 110);
-  
-  // Draw play/pause button
-  fill(100);
-  rect(20, 140, 60, 30, 5);
-  fill(240);
-  if (song.isPlaying()) {
-    text("Pause", 20, 145);
-  } else {
-    text("Play", 20, 145);
-  }
 }
 
 void createControls() {
