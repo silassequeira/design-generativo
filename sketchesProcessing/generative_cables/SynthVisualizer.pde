@@ -28,6 +28,8 @@ class SynthVisualizer {
     this.disconnectionsInProgress = new ArrayList<DisconnectionProgress>();
     this.globalAnimationTime = 0;
   }
+  
+  int multiplier=2;
 
   void setup() {
     fullScreen();
@@ -41,8 +43,8 @@ class SynthVisualizer {
     this.resetSimulation();
 
     // Start with fewer cables so we can see them being created
-    if (this.cables.size() > 3) {
-      this.cables = new ArrayList<Cable>(this.cables.subList(0, 3));
+    if (this.cables.size() > 20) {
+      this.cables = new ArrayList<Cable>(this.cables.subList(0,20));
     }
   }
 
@@ -72,7 +74,7 @@ class SynthVisualizer {
     float usableHeight = this.canvasHeight - (verticalMargin * 2);
 
     // Top row of jacks
-    int topJackCount = 8;
+    int topJackCount = 8 * multiplier;
     for (int i = 0; i < topJackCount; i++) {
       this.jacks.add(new Jack(
         horizontalMargin + (usableWidth / (topJackCount - 1)) * i,
@@ -83,7 +85,7 @@ class SynthVisualizer {
     }
 
     // Bottom row of jacks
-    int bottomJackCount = 8;
+    int bottomJackCount = 8 * multiplier;
     for (int i = 0; i < bottomJackCount; i++) {
       this.jacks.add(new Jack(
         horizontalMargin + (usableWidth / (bottomJackCount - 1)) * i,
@@ -94,7 +96,7 @@ class SynthVisualizer {
     }
 
     // Middle row of jacks
-    int middleJackCount = 8;
+    int middleJackCount = 8 * multiplier;
     for (int i = 0; i < middleJackCount; i++) {
       this.jacks.add(new Jack(
         horizontalMargin + (usableWidth / (middleJackCount - 1)) * i,
@@ -105,7 +107,7 @@ class SynthVisualizer {
     }
 
     // Left column of jacks
-    int leftJackCount = 3;
+    int leftJackCount = 3 * multiplier;
     for (int i = 0; i < leftJackCount; i++) {
       this.jacks.add(new Jack(
         horizontalMargin,
@@ -116,7 +118,7 @@ class SynthVisualizer {
     }
 
     // Right column of jacks
-    int rightJackCount = 3;
+    int rightJackCount = 3 * multiplier;
     for (int i = 0; i < rightJackCount; i++) {
       this.jacks.add(new Jack(
         this.canvasWidth - horizontalMargin,
@@ -171,7 +173,7 @@ class SynthVisualizer {
       this.lastConnectionTime = millis();
 
       // Randomly decide to create or remove a connection
-      if (random(1) < 0.6 && this.cables.size() < this.config.cableCount) {
+      if (random(1) < 0.8 && this.cables.size() < this.config.cableCount) {
         // Create a new connection
         this.createNewConnection();
       } else if (this.cables.size() > 0) {

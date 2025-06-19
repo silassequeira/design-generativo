@@ -1,7 +1,7 @@
 Main Colors:
 rgb(35, 139, 47) - Green 
 rgb(255, 102, 0) - Orange
-rgb(206, 73, 46) - Orange Dark
+rgb(241, 201, 193) - Orange Dark
 rgb(226, 190, 82) - Yellow
 rgb(247, 236, 205) - Yellow Light
 rgb(79, 121, 120) - Blue
@@ -33,7 +33,75 @@ rgb(130, 87, 0) - (A very dark, deep, almost brownish-orange)
 
 Blue Palette:
 rgb(0, 153, 255) - (A vibrant, clear blue)
-rgb(0, 122, 204) - (A classic, medium blue)
+rgb(0, 122, 204) - (A classic, medium blueSTART
+│
+├─ INITIALIZATION
+│  ├─ Create Config (physics & appearance settings)
+│  ├─ Initialize collections (jacks, cables, animations)
+│  └─ Setup canvas (fullscreen)
+│
+├─ SIMULATION SETUP
+│  │
+│  ├─ CREATE JACKS (connection points)
+│  │  ├─ Create top row (8 jacks)
+│  │  ├─ Create bottom row (8 jacks)
+│  │  ├─ Create middle row (8 jacks)
+│  │  ├─ Create left column (3 jacks)
+│  │  └─ Create right column (3 jacks)
+│  │
+│  └─ CREATE INITIAL CABLES
+│     └─ For each planned cable:
+│        ├─ Find random unconnected jack (start)
+│        ├─ Find random unconnected jack (end)
+│        └─ Create cable between jacks
+│
+├─ MAIN ANIMATION LOOP
+│  │
+│  ├─ UPDATE SIMULATION STATE
+│  │  ├─ Calculate deltaTime
+│  │  ├─ Update physics parameters (gravity & tension)
+│  │  └─ Update animation time
+│  │
+│  ├─ MANAGE CONNECTIONS
+│  │  │
+│  │  ├─ Update in-progress connections
+│  │  │  └─ For each connecting cable:
+│  │  │     └─ Is connection animation complete?
+│  │  │        ├─ YES → Move to active cables
+│  │  │        └─ NO → Continue animation
+│  │  │
+│  │  ├─ Update in-progress disconnections
+│  │  │  └─ For each disconnecting cable:
+│  │  │     └─ Is disconnection animation complete?
+│  │  │        ├─ YES → Remove cable, free jacks
+│  │  │        └─ NO → Continue animation
+│  │  │
+│  │  └─ Is it time for connection event?
+│  │     └─ YES → Decide action:
+│  │            └─ Random choice (80/20)
+│  │               ├─ 80% → Create new connection
+│  │               │      └─ Are unconnected jacks available?
+│  │               │         ├─ YES → Create new cable animation
+│  │               │         └─ NO → Skip
+│  │               │
+│  │               └─ 20% → Remove random connection
+│  │                      └─ Are cables available?
+│  │                         ├─ YES → Start disconnection animation
+│  │                         └─ NO → Create new connection instead
+│  │
+│  ├─ UPDATE PHYSICS
+│  │  └─ For each cable:
+│  │     ├─ Update points using Verlet integration
+│  │     └─ Apply constraints (cable length, tension)
+│  │
+│  └─ DRAW VISUALIZATION
+│     ├─ Draw cables
+│     ├─ Draw connection animations
+│     ├─ Draw disconnection animations
+│     ├─ Draw jacks (connection points)
+│     └─ Draw cable connectors
+│
+END)
 rgb(0, 92, 163) - (A slightly deeper, more traditional blue)
 rgb(0, 61, 122) - (A rich, darker blue)
 rgb(0, 31, 82) - (A deep, navy blue)

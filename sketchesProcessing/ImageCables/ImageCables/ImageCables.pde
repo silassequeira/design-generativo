@@ -13,7 +13,7 @@ void setup() {
   reconstructionSystem = new ReconstructionSystem(this);
   
   // Load the image - Processing doesn't have preload
-reconstructionSystem.loadImage("blood-elevator-rs.jpg");
+reconstructionSystem.loadImage("the_shining_maze.png");
 
   // Initialize ++the reconstruction system
   reconstructionSystem.initialize(width, height);

@@ -1,6 +1,6 @@
 class Config {
     // Number of cables to create initially
-    int cableCount = 12;
+    int cableCount = 180;
 
     // Downward force applied to cable segments (higher = more drooping)
     float gravity = 0.01;
@@ -29,17 +29,17 @@ class Config {
     // Jack color when not connected
     color jackColor = color(215, 206, 197);
     
-    int selectedPalette = 0;
+    int selectedPalette = 4;
     
     // Whether to select from all colors in a palette or just one random color
-    boolean useRandomColorFromPalette = true;
+    boolean useRandomColorFromPalette = false;
 
     // Animation settings
     // Time in milliseconds between automatic connection/disconnection events
-    int connectionInterval = 1500;
+    int connectionInterval = 800;
 
     // Duration in milliseconds for connection/disconnection animations to complete
-    int connectionDuration = 1000;
+    int connectionDuration = 100;
 
     // Min and max values for gravity oscillation over time for organic movement
     float[] autoGravityRange = {0.05, 0.25};

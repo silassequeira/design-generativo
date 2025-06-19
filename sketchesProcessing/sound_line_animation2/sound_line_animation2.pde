@@ -4,8 +4,10 @@ SoundFile song;
 FFT fft;
 int bands = 512;
 float[] spectrum = new float[bands];
-color[] cores = {
-  color(35, 139, 47),    // Green
+
+// Main colors and specialized palettes
+color[] mainColors = {
+  color(35, 139, 47),    // Green 
   color(255, 102, 0),    // Orange
   color(206, 73, 46),    // Orange Dark
   color(226, 190, 82),   // Yellow
@@ -13,6 +15,49 @@ color[] cores = {
   color(79, 121, 120),   // Blue
   color(215, 206, 197)   // White Grey
 };
+
+color[] redPalette = {
+  color(229, 0, 0),      // Vibrant red
+  color(204, 0, 0),      // Classic red
+  color(178, 0, 0),      // Deeper red
+  color(153, 0, 0),      // Rich red
+  color(127, 0, 0),      // Burgundy red
+  color(102, 0, 0)       // Dark maroon
+};
+
+color[] greenPalette = {
+  color(0, 229, 0),      // Lime green
+  color(35, 139, 47),    // Green 
+  color(0, 204, 0),      // Bright green
+  color(0, 178, 0),      // Natural green
+  color(0, 153, 0),      // Forest green
+  color(0, 127, 0),      // Dark green
+  color(0, 102, 0),       // Hunter green
+    color(226, 190, 82),   // Yellow
+  color(247, 236, 205)  // Yellow Light
+};
+
+color[] orangePalette = {
+  color(255, 165, 0),    // Vibrant orange
+  color(230, 149, 0),    // Traditional orange
+  color(205, 133, 0),    // Muted orange
+  color(180, 118, 0),    // Burnt orange
+  color(155, 102, 0),    // Earthy orange
+  color(130, 87, 0)      // Brownish-orange
+};
+
+color[] bluePalette = {
+  color(0, 153, 255),    // Vibrant blue
+  color(0, 122, 204),    // Medium blue
+  color(0, 92, 163),     // Traditional blue
+  color(0, 61, 122),     // Darker blue
+  color(0, 31, 82),      // Navy blue
+  color(0, 0, 41)        // Black-blue
+};
+
+// Store all palettes in an array for easy switching
+color[][] allPalettes = {mainColors, redPalette, greenPalette, orangePalette, bluePalette};
+int activePaletteIndex = 0; // Start with main colors
 
 int numColunas = 40;
 float[] xPos;
@@ -35,7 +80,7 @@ void setup() {
   }
   
   // Initialize sound
-  song = new SoundFile(this, "song.mp3");
+  song = new SoundFile(this, "Main Title.mp3");
   fft = new FFT(this, bands);
   fft.input(song);
   
@@ -68,6 +113,11 @@ void draw() {
   
 }
 
+String getPaletteName(int index) {
+  String[] names = {"Main Colors", "Red Palette", "Green Palette", "Orange Palette", "Blue Palette"};
+  return names[index];
+}
+
 float getBandLevel(float lowFreq, float highFreq) {
   // Calculate band indices
   float bandWidth = (song.sampleRate() / 2.0) / bands;
@@ -89,6 +139,9 @@ float getBandLevel(float lowFreq, float highFreq) {
 }
 
 void drawHypnoticLines(float bass, float mid, float treble) {
+  // Get current active palette
+  color[] currentPalette = allPalettes[activePaletteIndex];
+  
   // Base speed with overall intensity modulation
   float speed = 4 + 10 * bass;
   
@@ -105,7 +158,7 @@ void drawHypnoticLines(float bass, float mid, float treble) {
     float offset = (i - numColunas/2.0) * spacing;
     offset += 20 * sin(globalPhase * 2 + i) * bass;
     
-    float scaleFactor=0.4;
+    float scaleFactor = 0.4;
     float lineY1 = centerY + offset * scaleFactor;
     float lineY2 = centerY - offset * scaleFactor;
     
@@ -116,8 +169,8 @@ void drawHypnoticLines(float bass, float mid, float treble) {
     // Line weight with frequency modulation
     float lineWeight = 2 + 5 * bass + 5 * abs(sin(radians(frameCount * 2 + i * 10)));
     
-    // Get color from palette
-    color c = cores[i % cores.length];
+    // Get color from current palette (cycling through the colors)
+    color c = currentPalette[i % currentPalette.length];
     
     // Subtle color modulation based on frequencies
     float r = min(255, red(c) * (1 + bass * 0.2));
@@ -141,11 +194,27 @@ void drawHypnoticLines(float bass, float mid, float treble) {
   }
 }
 
-
 void mousePressed() {
   if (song.isPlaying()) {
     song.pause();
   } else {
     song.play();
+  }
+}
+
+void keyPressed() {
+  // Use number keys 1-5 to select specific palettes
+  if (key >= '1' && key <= '5') {
+    int selectedIndex = key - '1'; // Convert key to index (0-4)
+    if (selectedIndex < allPalettes.length) {
+      activePaletteIndex = selectedIndex;
+    }
+  } else if (key == ' ') {
+    // Toggle play/pause with spacebar
+    if (song.isPlaying()) {
+      song.pause();
+    } else {
+      song.play();
+    }
   }
 }

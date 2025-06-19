@@ -24,7 +24,7 @@ class Jack {
         circle(this.x, this.y, this.config.jackRadius * 1.5);
 
         // Draw jack
-        fill(this.connected ? color(150, 210, 150) : this.config.jackColor);
+        fill(this.connected ? color(215, 206, 197) : this.config.jackColor);
         stroke(30);
         strokeWeight(1);
         circle(this.x, this.y, this.config.jackRadius);
@@ -42,12 +42,14 @@ class Jack {
 // Move the static method to a separate utility class
 class JackFactory {
     // Create all jacks in the grid layout
+        int multiplier= 2;
+
     ArrayList<Jack> createJacks(float canvasWidth, float canvasHeight, Config config) {
         ArrayList<Jack> jacks = new ArrayList<Jack>();
         int jackId = 0;
 
         // Top row of jacks
-        int topJackCount = 8;
+        int topJackCount = 8 * multiplier;
         for (int i = 0; i < topJackCount; i++) {
             jacks.add(new Jack(
                 (canvasWidth / (topJackCount + 1)) * (i + 1),
@@ -58,7 +60,7 @@ class JackFactory {
         }
 
         // Bottom row of jacks
-        int bottomJackCount = 8;
+        int bottomJackCount = 8 * multiplier;
         for (int i = 0; i < bottomJackCount; i++) {
             jacks.add(new Jack(
                 (canvasWidth / (bottomJackCount + 1)) * (i + 1),
@@ -69,7 +71,7 @@ class JackFactory {
         }
 
         // Middle row of jacks
-        int middleJackCount = 8;
+        int middleJackCount = 8 * multiplier;
         for (int i = 0; i < middleJackCount; i++) {
             jacks.add(new Jack(
                 (canvasWidth / (middleJackCount + 1)) * (i + 1),
@@ -80,7 +82,7 @@ class JackFactory {
         }
 
         // Left column of jacks
-        int leftJackCount = 3;
+        int leftJackCount = 3 * multiplier;
         for (int i = 0; i < leftJackCount; i++) {
             jacks.add(new Jack(
                 80,
@@ -91,7 +93,7 @@ class JackFactory {
         }
 
         // Right column of jacks
-        int rightJackCount = 3;
+        int rightJackCount = 3 * multiplier;
         for (int i = 0; i < rightJackCount; i++) {
             jacks.add(new Jack(
                 canvasWidth - 80,

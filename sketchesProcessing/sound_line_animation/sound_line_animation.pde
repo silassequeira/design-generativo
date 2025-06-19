@@ -25,11 +25,14 @@ color[] redPalette = {
 
 color[] greenPalette = {
   color(0, 229, 0),      // Lime green
+  color(35, 139, 47),    // Green 
   color(0, 204, 0),      // Bright green
   color(0, 178, 0),      // Natural green
   color(0, 153, 0),      // Forest green
   color(0, 127, 0),      // Dark green
-  color(0, 102, 0)       // Hunter green
+  color(0, 102, 0),       // Hunter green
+    color(226, 190, 82),   // Yellow
+  color(247, 236, 205)  // Yellow Light
 };
 
 color[] orangePalette = {
@@ -54,7 +57,7 @@ color[] bluePalette = {
 color[][] allPalettes = {mainColors, redPalette, greenPalette, orangePalette, bluePalette};
 int activePaletteIndex = 0; // Start with main colors
 int paletteChangeTimer = 0;
-int paletteChangeDuration = 300; // Change palette every 5 seconds (60 frames * 5)
+int paletteChangeDuration = 80000; // Change palette every 5 seconds (60 frames * 5)
 
 float lineSpacing = 40;
 float scroll = 0;
@@ -66,12 +69,12 @@ float midLevel = 0;
 float trebleLevel = 0;
 
 void setup() {
-  size(1000, 600);
+  fullScreen();
   frameRate(60);
   rectMode(CENTER);
   
   // Initialize sound
-  song = new SoundFile(this, "song.mp3");
+  song = new SoundFile(this, "Main Title.mp3");
   analyzer = new Amplitude(this);
   
   // Analyze the entire sound file
@@ -115,14 +118,6 @@ void draw() {
     paletteChangeTimer = 0;
   }
   
-  // Display current palette name
-  fill(255);
-  textSize(16);
-  String paletteName = getPaletteName(activePaletteIndex);
-  text("Current Palette: " + paletteName, width - 200, 30);
-  
-  // Display controls info
-  text("Press SPACE to change palette", width - 200, 60);
 }
 
 String getPaletteName(int index) {
@@ -138,8 +133,8 @@ void drawRoad() {
     float y = (i * lineSpacing - scroll % lineSpacing);
     
     // Base properties
-    float baseWidth = width * 0.8;
-    float baseHeight = 10;
+    float baseWidth = width * 0.2;
+    float baseHeight = 5;
     
     // Dynamic effects based on sound
     float pulse = 1.0 + 1.5 * smoothAmplitude * sin(frameCount * 0.05 + i * 0.3);

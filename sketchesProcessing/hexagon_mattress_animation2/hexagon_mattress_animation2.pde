@@ -1,4 +1,4 @@
-float hexSize = 50;
+float hexSize = 40;
 float spacingMultiplier = 1.2;
 
 void setup() {
@@ -37,7 +37,7 @@ void draw() {
       // Calculate distance from center for animation timing
       float distanceFromCenter = dist(worldX, worldY, centerX, centerY);
       float radialTime = map(distanceFromCenter, 0, 800, 0, 2 * TWO_PI);
-      float waveProgress = sin(radialTime + frameCount * 0.05);
+      float waveProgress = sin(radialTime + frameCount * 0.10);
 
       if (waveProgress > 0) {
         drawUnit(worldX, worldY, hexSize, i, x, waveProgress);

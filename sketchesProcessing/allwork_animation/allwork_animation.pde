@@ -1,4 +1,5 @@
-color[] palette = {
+// Main colors and specialized palettes
+color[] mainPalette = {
   color(35, 139, 47),    // Green
   color(255, 102, 0),    // Orange
   color(206, 73, 46),    // Orange Dark
@@ -7,7 +8,52 @@ color[] palette = {
   color(79, 121, 120)    // Blue
 };
 
+color[] redPalette = {
+  color(229, 0, 0),      // Vibrant red
+  color(204, 0, 0),      // Classic red
+  color(178, 0, 0),      // Deeper red
+  color(153, 0, 0),      // Rich red
+  color(127, 0, 0),      // Burgundy red
+  color(102, 0, 0)       // Dark maroon
+};
+
+color[] greenPalette = {
+  color(0, 229, 0),      // Lime green
+  color(0, 204, 0),      // Bright green
+  color(0, 178, 0),      // Natural green
+  color(0, 153, 0),      // Forest green
+  color(0, 127, 0),      // Dark green
+  color(0, 102, 0)       // Hunter green
+};
+
+color[] orangePalette = {
+color(215, 206, 197), // White Grey
+color(226, 190, 82),  // Yellow
+color(247, 236, 205), // Yellow Light
+color(255, 102, 0),   // Orange
+color(230, 149, 0),   // Traditional orange
+color(205, 133, 0),   // Muted orange
+color(206, 73, 46),   // Burnt orange
+color(155, 102, 0),   // Earthy orange
+color(130, 87, 0),   // Brownish orange
+color(231, 200, 109)    // Brownish orange
+};
+
+color[] bluePalette = {
+  color(0, 153, 255),    // Vibrant blue
+  color(0, 122, 204),    // Medium blue
+  color(0, 92, 163),     // Traditional blue
+  color(0, 61, 122),     // Darker blue
+  color(0, 31, 82),      // Navy blue
+  color(0, 0, 41)        // Black-blue
+};
+
+// Store all palettes in an array for easy switching
+color[][] allPalettes = {mainPalette, redPalette, greenPalette, orangePalette, bluePalette};
+int activePaletteIndex = 4; // Start with main colors
+
 String quote = "All work and no play makes Jack a dull boy.";
+
 PFont font;
 float lineHeight;
 int totalLines;
@@ -15,19 +61,20 @@ int totalLines;
 // Track all active columns
 ArrayList<Column> columns;
 int nextColumnStartTime;
-int columnDelay = 1000; // milliseconds between new columns
+int columnDelay = 6000; // milliseconds between new columns
 
 class Column {
   float x;
   int currentLine;
-  color textColor;
+  int colorIndex; // Store the index into the palette rather than a specific color
   boolean isComplete;
   ArrayList<String> lines;
   
   Column(float xPos) {
     x = xPos;
     currentLine = 0;
-    textColor = palette[int(random(palette.length))];
+    // Just store the index, not the actual color
+    colorIndex = int(random(allPalettes[activePaletteIndex].length));
     isComplete = false;
     lines = new ArrayList<String>();
   }
@@ -44,6 +91,8 @@ class Column {
   }
   
   void display() {
+    // Get the color from the current active palette using the stored index
+    color textColor = allPalettes[activePaletteIndex][colorIndex % allPalettes[activePaletteIndex].length];
     fill(textColor);
     for (int i = 0; i < lines.size(); i++) {
       text(lines.get(i), x, 30 + i * lineHeight);
@@ -57,24 +106,24 @@ class Column {
 
 void setup() {
   fullScreen();
-  background(0);
+  background(20, 20, 30);
   
   font = createFont("Courier", 24);
   textFont(font);
-  textSize(24);
+  textSize(30);
   textAlign(LEFT, TOP);
   
   lineHeight = textAscent() + textDescent() + 10;
-  totalLines = int((height - 60) / lineHeight); // Leave some margin
+  totalLines = int((height - 20) / lineHeight); // Leave some margin
   
   columns = new ArrayList<Column>();
   nextColumnStartTime = millis() + columnDelay;
   
-  frameRate(30);
+  frameRate(12);
 }
 
 void draw() {
-  background(0);
+  background(20, 20, 30);
   
   // Update all existing columns
   for (Column col : columns) {
@@ -92,6 +141,12 @@ void draw() {
   if (columns.size() > 6) { // Reduced limit to ensure better spacing
     removeOldestCompletedColumn();
   }
+  
+}
+
+String getPaletteName(int index) {
+  String[] names = {"Main Colors", "Red", "Green", "Orange", "Blue"};
+  return names[index];
 }
 
 void startNewColumn() {
@@ -179,7 +234,15 @@ boolean removeOldestCompletedColumn() {
 
 // Interactive controls
 void keyPressed() {
-  if (key == ' ') {
+  // Number keys 1-5 for palette switching
+  if (key >= '1' && key <= '5') {
+    int selectedIndex = key - '1'; // Convert key to index (0-4)
+    if (selectedIndex < allPalettes.length) {
+      activePaletteIndex = selectedIndex;
+      // Note: This only affects future columns, not existing ones
+    }
+  }
+  else if (key == ' ') {
     // Space to pause/resume
     if (isLooping()) {
       noLoop();

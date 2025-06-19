@@ -1,7 +1,7 @@
 ImageCableVisualizer visualizer;
 
 void setup() {
-  size(1200, 800);
+  fullScreen();
   visualizer = new ImageCableVisualizer();
   visualizer.setup();
 }

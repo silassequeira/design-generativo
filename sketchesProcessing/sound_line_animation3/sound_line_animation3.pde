@@ -21,7 +21,7 @@ color[] redPalette = {
 
 color[] greenPalette = {
   color(0, 229, 0), color(0, 204, 0), color(0, 178, 0), 
-  color(0, 153, 0), color(0, 127, 0), color(0, 102, 0)
+  color(0, 153, 0), color(0, 127, 0), color(0, 102, 0),color(226, 190, 82), color(247, 236, 205)
 };
 
 color[] orangePalette = {
@@ -50,7 +50,7 @@ void setup() {
   frameRate(60);
 
   // Load the MP3 file
-  song = new SoundFile(this, "song.mp3");
+  song = new SoundFile(this, "Main Title.mp3");
   song.loop();
 
   // Initialize FFT
@@ -118,7 +118,7 @@ void draw() {
     float energy = lerp(lastEnergies[colorIndex % activeColors.length], 
                          currentEnergies[colorIndex % activeColors.length], 0.1);
     float baseLength = map(energy, 0, 200, 30, 300);
-    float dynamicLength = 3 * baseLength * (1 + 0.5 * sin(millis() * 0.002 + i));
+    float dynamicLength = 6 * baseLength * (1 + 0.5 * sin(millis() * 0.002 + i));
 
     // Add oscillation to angle
     float angle = angles[i] + 0.05 * sin(millis() * 0.001 + i);
@@ -143,13 +143,6 @@ void draw() {
   
   // Reset transform before drawing UI
   resetMatrix();
-  
-  // Display current palette name
-  fill(255);
-  textSize(16);
-  String paletteName = getPaletteName(activePaletteIndex);
-  text("Current Palette: " + paletteName, 20, 30);
-  text("Press 1-5 keys to change palette", 20, 60);
 }
 
 String getPaletteName(int index) {
